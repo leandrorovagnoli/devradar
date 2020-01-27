@@ -17,11 +17,11 @@ module.exports = {
         const techsArray = parseStringAsArray(techs);
 
         const location = {
-                type: 'Point',
-                coordinates: [longitude, latitude], 
-            };
-        
-        const newDev = { 
+            type: 'Point',
+            coordinates: [longitude, latitude],
+        };
+
+        const newDev = {
             $set: {
                 name,
                 avatar_url,
@@ -37,15 +37,18 @@ module.exports = {
     },
 
     async destroy(request, response) {
-        const { github_username } = request.body;
-        
-        await Dev.deleteOne({
-             github_username: {
-                 $eq: github_username
-             }
-            });
+        const { id } = request.params;
 
-        return response.json({ message: 'Registro apagado com sucesso!' });
+        if (!id)
+            return response.json({ message: 'Registro não encontrado!' });
+
+        await Dev.findByIdAndDelete(id,
+            function (err, obj) {
+                if (err)
+                    response.status(500).send(err);
+                    
+                return response.json({ message: 'Registro apagado com sucesso!' });
+            });
     },
 
     async store(request, response) {
@@ -53,19 +56,18 @@ module.exports = {
 
         let dev = await Dev.findOne({ github_username });
 
-        if (!dev)
-        {
+        if (!dev) {
             const apiResponse = await axios.get(`https://api.github.com/users/${github_username}`);
-    
+
             const { name = login, bio, avatar_url } = apiResponse.data;
-        
+
             const techsArray = parseStringAsArray(techs);
-        
+
             const location = {
                 type: 'Point',
-                coordinates: [longitude, latitude], 
+                coordinates: [longitude, latitude],
             };
-        
+
             dev = await Dev.create({
                 github_username,
                 name,
@@ -75,7 +77,7 @@ module.exports = {
                 location,
             })
         }
-        
+
         return response.json(dev);
     }
 };
