@@ -12,6 +12,8 @@ useUnifiedTopology: true,
 useCreateIndex: true,
 });
 
+mongoose.set('useFindAndModify', false);
+
 app.use(cors());
 app.use(express.json()); 
 app.use(routes);

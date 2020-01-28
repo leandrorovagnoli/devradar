@@ -10,10 +10,9 @@ module.exports = {
         const devs = await Dev.find({
             techs: {
                 $in: techsArray,
-
             },
             location: {
-                $near:  {
+                $near: {
                     $geometry: {
                         type: 'Point',
                         coordinates: [longitude, latitude],

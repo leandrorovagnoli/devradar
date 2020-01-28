@@ -8,6 +8,6 @@ routes.get('/devs', DevController.index)
 routes.post('/devs', DevController.store);
 routes.get('/search', SearchController.index)
 routes.delete('/:id', DevController.destroy)
-routes.put('/update', DevController.update)
+routes.put('/:id', DevController.update)
 
 module.exports = routes;

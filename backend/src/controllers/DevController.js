@@ -10,9 +10,7 @@ module.exports = {
     },
 
     async update(request, response) {
-        const { name, techs, latitude, longitude, bio, avatar_url, github_username } = request.body;
-
-        let dev = await Dev.findOne({ github_username });
+        const { name, techs, latitude, longitude, bio, avatar_url } = request.body;
 
         const techsArray = parseStringAsArray(techs);
 
@@ -31,9 +29,13 @@ module.exports = {
             }
         };
 
-        await Dev.updateOne(dev, newDev);
+        await Dev.findByIdAndUpdate(request.params.id, newDev,
+            function (err, obj) {
+                if (err)
+                    res.status(500).send(err);
 
-        return response.json({ message: 'Registro atualizado com sucesso!' });
+                return response.json({ message: 'Registro atualizado com sucesso!' });
+            });
     },
 
     async destroy(request, response) {
@@ -46,7 +48,7 @@ module.exports = {
             function (err, obj) {
                 if (err)
                     response.status(500).send(err);
-                    
+
                 return response.json({ message: 'Registro apagado com sucesso!' });
             });
     },
