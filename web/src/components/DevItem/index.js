@@ -8,16 +8,7 @@ function DevItem({ dev }) {
     async function handleDeleteDev(e) {
         e.preventDefault();
 
-        const { github_username } = dev;
-
-        await api.delete('/delete', {
-            header: {
-
-            },
-            data: {
-                github_username
-            }
-        })
+        await api.delete(`/${dev._id}`);
     }
 
     return (
